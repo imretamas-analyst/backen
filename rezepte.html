@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rezepte & Brot-Rechner — Tamás Imre</title>
+<meta name="description" content="Brot-Rechner und Rezepte von Tamás Imre — Bäckerprozente, Hydration und Backbarkeit, zweisprachig.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fff;--paper-2:#fbfaf7;--ink:#171310;--ink-soft:#5f584e;--gold:#a9772e;--line:#e8e3da;--ok:#3f7d3f;--warn:#b8791f;--bad:#b4472e;--maxw:1120px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Karla",system-ui,sans-serif;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:500;line-height:1.08;margin:0}
+a{color:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+.t{display:none}
+body.lang-de .t.de{display:inline}
+body.lang-en .t.en{display:inline}
+/* side wheat */
+.field{position:fixed;top:0;bottom:0;width:120px;pointer-events:none;z-index:0;opacity:.055;color:var(--ink)}
+.field.left{left:-14px}.field.right{right:-14px;transform:scaleX(-1)}
+.field svg{position:absolute;width:78px}.field .a{top:8%}.field .b{top:40%}.field .c{top:72%}
+@media(max-width:1000px){.field{display:none}}
+/* bar */
+header.bar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Fraunces",serif;font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:14px;text-decoration:none}
+.brand svg{width:20px;height:20px;color:var(--gold)}
+.bar nav{display:flex;align-items:center;gap:18px}
+.bar nav a{text-decoration:none;font-weight:600;font-size:14px;color:var(--ink-soft);border-bottom:2px solid transparent;padding-bottom:2px}
+.bar nav a:hover{color:var(--gold)}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;font-weight:700;font-size:13px}
+.lang button{border:0;background:transparent;padding:7px 13px;cursor:pointer;color:var(--ink-soft);letter-spacing:.08em;font-family:inherit;transition:.2s}
+.lang button.on{background:var(--ink);color:#fff}
+/* hero */
+.hero{position:relative;z-index:1;padding:54px 0 10px}
+.eyebrow{font-weight:700;letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--gold);margin:0 0 16px}
+.hero h1{font-size:clamp(34px,6vw,60px);letter-spacing:-.01em}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.lede{margin:22px 0 0;font-size:clamp(16px,2vw,19px);color:var(--ink-soft);max-width:44em}
+.rule{display:flex;align-items:center;gap:18px;color:var(--line);margin:40px 0 28px}
+.rule::before,.rule::after{content:"";height:1px;background:var(--line);flex:1}
+.rule svg{width:24px;height:24px;color:var(--gold);flex:none}
+/* recipe selector */
+.selector{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.selector button{font-family:"Fraunces",serif;font-size:17px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 18px;border-radius:999px;cursor:pointer;transition:.2s}
+.selector button:hover{border-color:var(--gold)}
+.selector button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+/* panel */
+.panel{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;margin-top:22px;align-items:start}
+@media(max-width:860px){.panel{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:6px;background:#fff;padding:22px 24px}
+.rtitle{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.rtitle h2{font-size:clamp(24px,3.5vw,34px)}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 2px}
+.badge{font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:11px;padding:5px 11px;border-radius:999px;background:var(--paper-2);border:1px solid var(--line);color:var(--ink-soft)}
+.badge.cls{background:#f3ece0;color:#7a5a24;border-color:#e4d6bf}
+.meta-line{color:var(--ink-soft);font-size:15px;margin:10px 0 0}
+.meta-line b{color:var(--ink);font-weight:600}
+/* ingredient table */
+.stageblk{margin-top:16px}
+.stagehd{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:11px;color:var(--gold);margin:0 0 6px;border-bottom:1px solid var(--line);padding-bottom:4px}
+table.ing{width:100%;border-collapse:collapse;font-size:15.5px}
+table.ing td{padding:5px 0;vertical-align:top}
+table.ing td.g{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;width:74px}
+table.ing td.p{text-align:right;white-space:nowrap;color:var(--ink-soft);font-variant-numeric:tabular-nums;width:66px}
+table.ing .inote{color:var(--ink-soft);font-size:13px}
+/* metrics */
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-top:4px}
+.metric{background:#fff;padding:12px 14px}
+.metric .k{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.metric .v{font-family:"Fraunces",serif;font-size:24px;margin-top:2px}
+.metric .v small{font-size:14px;color:var(--ink-soft)}
+/* verdict + checks */
+.verdict{display:inline-flex;align-items:center;gap:8px;font-weight:700;border-radius:999px;padding:7px 14px;font-size:14px;margin:16px 0 8px}
+.verdict.ok{background:#eaf3ea;color:var(--ok)}
+.verdict.warn{background:#f7efdf;color:var(--warn)}
+.verdict.bad{background:#f6e6e1;color:var(--bad)}
+ul.checks{list-style:none;padding:0;margin:6px 0 0}
+ul.checks li{display:flex;gap:9px;align-items:flex-start;padding:5px 0;font-size:15px;color:var(--ink-soft);border-top:1px solid var(--line)}
+ul.checks li .dot{flex:none;width:9px;height:9px;border-radius:50%;margin-top:7px}
+.dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}
+/* controls */
+.controls{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+.ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.ctl label{font-weight:600;font-size:14px;min-width:120px}
+.ctl input[type=number]{width:96px;padding:7px 9px;border:1px solid var(--line);border-radius:6px;font:inherit}
+.ctl input[type=range]{flex:1;min-width:140px;accent-color:var(--gold)}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;color:var(--ink-soft)}
+.chip:hover{border-color:var(--gold)}
+.wval{font-variant-numeric:tabular-nums;font-weight:700;min-width:54px;text-align:right}
+.hint{font-size:13px;color:var(--ink-soft);margin-top:2px}
+footer.foot{position:relative;z-index:1;text-align:center;padding:40px 0 48px;margin-top:40px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:13.5px}
+footer.foot svg{width:22px;height:22px;color:var(--gold);opacity:.8;margin-bottom:8px}
+</style>
+</head>
+<body class="lang-de" id="top">
+<div class="field left" aria-hidden="true"><div class="a" data-stalk></div><div class="b" data-stalk></div><div class="c" data-stalk></div></div>
+<div class="field right" aria-hidden="true"><div class="a" data-stalk></div><div class="b" data-stalk></div><div class="c" data-stalk></div></div>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span data-ear></span> Tamás&nbsp;Imre</a>
+    <nav>
+      <a href="index.html"><span class="t de">&larr; Portfolio</span><span class="t en">&larr; Portfolio</span></a>
+      <div class="lang" role="group" aria-label="Sprache / Language">
+        <button id="btn-de" class="on" onclick="setLang('de')">DE</button>
+        <button id="btn-en" onclick="setLang('en')">EN</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow"><span class="t de">Brot-Rechner · Rezepte</span><span class="t en">Bread calculator · Recipes</span></p>
+    <h1><span class="t de">Meine Rezepte, in <em>Bäckerprozenten</em>.</span><span class="t en">My recipes, in <em>baker's percentages</em>.</span></h1>
+    <p class="lede">
+      <span class="t de">Ein kleiner Rechner, den ich aus meiner eigenen Mehl- und Rezept-Datenbank gebaut habe. Wähle ein Rezept, skaliere es auf jede Menge, und der Rechner normalisiert alles auf 100% Mehl – inklusive Levain und Quellstück – und prüft, ob die Verhältnisse backbar sind. Daten kommen aus einer Google-Tabelle, die ich laufend erweitere.</span>
+      <span class="t en">A little calculator I built from my own flour and recipe database. Pick a recipe, scale it to any amount, and it normalizes everything to 100% flour — levain and soaker included — then checks whether the ratios are bakeable. The data comes from a Google Sheet I keep expanding.</span>
+    </p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="rule"><span data-ear></span></div>
+  <div class="selector" id="selector"></div>
+  <div class="panel" id="panel"></div>
+</div>
+</main>
+
+<footer class="foot">
+  <span data-ear></span>
+  <div><span class="t de">Gebacken mit Geduld in Berlin · © 2026 Tamás Imre</span><span class="t en">Baked with patience in Berlin · © 2026 Tamás Imre</span></div>
+</footer>
+
+<script>
+const DATA = {
+ "flours": {
+  "KBL100": {
+   "name": {
+    "de": "KBL-100 Fehér királybúzaliszt",
+    "en": "KBL-100 white king-wheat flour"
+   },
+   "kind": "wheat",
+   "type_code": "~T550 (high protein)",
+   "protein": 16.2,
+   "absorption": "high",
+   "origin": "Ungarn",
+   "mill": "Garatmalom, Mohács",
+   "photo": "",
+   "notes": {
+    "de": "Starkes Struktur-Mehl, nimmt viel Wasser auf; ohne Zusatzstoffe",
+    "en": "Strong structure flour, absorbs a lot of water; additive-free"
+   },
+   "in_stock": "yes"
+  },
+  "RYE_T1150": {
+   "name": {
+    "de": "Roggenmehl T1150",
+    "en": "Rye flour T1150"
+   },
+   "kind": "rye",
+   "type_code": "T1150",
+   "protein": null,
+   "absorption": "medium",
+   "origin": "",
+   "mill": "",
+   "photo": "",
+   "notes": {
+    "de": "Mittel gemahlen, nicht Vollkorn; Geschmack & Feuchtigkeit",
+    "en": "Medium-milled, not wholegrain; flavour & moisture"
+   },
+   "in_stock": "yes"
+  },
+  "BL55": {
+   "name": {
+    "de": "Weißmehl BL55 / Finomliszt",
+    "en": "White wheat flour BL55"
+   },
+   "kind": "wheat",
+   "type_code": "~T550",
+   "protein": null,
+   "absorption": "medium",
+   "origin": "Ungarn",
+   "mill": "Pásztói / generisch",
+   "photo": "",
+   "notes": {
+    "de": "Feines Weißmehl; für Levain & süße Teige",
+    "en": "Fine white flour; for levain & enriched doughs"
+   },
+   "in_stock": "yes"
+  }
+ },
+ "ingredients": {
+  "WATER": {
+   "name": {
+    "de": "Wasser",
+    "en": "Water"
+   },
+   "category": "water",
+   "water_pct": 100,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "",
+    "en": ""
+   }
+  },
+  "SALT": {
+   "name": {
+    "de": "Salz",
+    "en": "Salt"
+   },
+   "category": "salt",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 100,
+   "soak_water_pct": 0,
+   "max_pct": 2.2,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "Zielwert ~2% vom Mehl",
+    "en": "Target ~2% of flour"
+   }
+  },
+  "SUGAR": {
+   "name": {
+    "de": "Zucker",
+    "en": "Sugar"
+   },
+   "category": "sugar",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 100,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "",
+    "en": ""
+   }
+  },
+  "MILK": {
+   "name": {
+    "de": "Vollmilch",
+    "en": "Whole milk"
+   },
+   "category": "liquid",
+   "water_pct": 87,
+   "fat_pct": 4,
+   "sugar_pct": 5,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "milk",
+   "photo": "",
+   "notes": {
+    "de": "",
+    "en": ""
+   }
+  },
+  "CREAM30": {
+   "name": {
+    "de": "Schlagsahne 30%",
+    "en": "Cream 30%"
+   },
+   "category": "liquid-fat",
+   "water_pct": 64,
+   "fat_pct": 30,
+   "sugar_pct": 3,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "milk",
+   "photo": "",
+   "notes": {
+    "de": "",
+    "en": ""
+   }
+  },
+  "BUTTER": {
+   "name": {
+    "de": "Butter",
+    "en": "Butter"
+   },
+   "category": "fat",
+   "water_pct": 16,
+   "fat_pct": 82,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "milk",
+   "photo": "",
+   "notes": {
+    "de": "",
+    "en": ""
+   }
+  },
+  "EGG": {
+   "name": {
+    "de": "Ei (ganz)",
+    "en": "Egg (whole)"
+   },
+   "category": "egg",
+   "water_pct": 75,
+   "fat_pct": 10,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "egg",
+   "photo": "",
+   "notes": {
+    "de": "~50 g pro Ei",
+    "en": "~50 g per egg"
+   }
+  },
+  "EGGYOLK": {
+   "name": {
+    "de": "Eigelb",
+    "en": "Egg yolk"
+   },
+   "category": "egg",
+   "water_pct": 50,
+   "fat_pct": 27,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "egg",
+   "photo": "",
+   "notes": {
+    "de": "~18 g pro Dotter",
+    "en": "~18 g per yolk"
+   }
+  },
+  "YEAST_FRESH": {
+   "name": {
+    "de": "Frischhefe",
+    "en": "Fresh yeast"
+   },
+   "category": "leavening",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 4,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "~1/3 davon als Trockenhefe",
+    "en": "~1/3 of this as dry yeast"
+   }
+  },
+  "STARTER": {
+   "name": {
+    "de": "Anstellgut (Anyakovász)",
+    "en": "Sourdough starter"
+   },
+   "category": "levain",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "gluten",
+   "photo": "",
+   "notes": {
+    "de": "100% Hydration → halb Mehl, halb Wasser",
+    "en": "100% hydration → half flour, half water"
+   }
+  },
+  "LEVAIN": {
+   "name": {
+    "de": "Levain (fertig)",
+    "en": "Levain (pre-made)"
+   },
+   "category": "levain",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "gluten",
+   "photo": "",
+   "notes": {
+    "de": "Fertiger Klumpen; Hydration in param (z. B. 50)",
+    "en": "Pre-made piece; hydration in param (e.g. 50)"
+   }
+  },
+  "FLAX_GROUND": {
+   "name": {
+    "de": "Leinsamen, gemahlen",
+    "en": "Flaxseed, ground"
+   },
+   "category": "seed",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 300,
+   "max_pct": 5,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "Kochstück/Quellstück; Gel bindet Wasser",
+    "en": "Cooked/soaked; the gel binds water"
+   }
+  },
+  "SESAME": {
+   "name": {
+    "de": "Sesam (geschält)",
+    "en": "Sesame (hulled)"
+   },
+   "category": "seed",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "sesame",
+   "photo": "",
+   "notes": {
+    "de": "Saatenmantel",
+    "en": "Seed coating"
+   }
+  },
+  "POPPY": {
+   "name": {
+    "de": "Mohn",
+    "en": "Poppy seed"
+   },
+   "category": "seed",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "Saatenmantel",
+    "en": "Seed coating"
+   }
+  },
+  "SUNFLOWER": {
+   "name": {
+    "de": "Sonnenblumenkerne",
+    "en": "Sunflower seeds"
+   },
+   "category": "seed",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "Saatenmantel",
+    "en": "Seed coating"
+   }
+  },
+  "VANILLA": {
+   "name": {
+    "de": "Vanille",
+    "en": "Vanilla"
+   },
+   "category": "flavoring",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "",
+    "en": ""
+   }
+  },
+  "LEMON_ZEST": {
+   "name": {
+    "de": "Zitronenschale",
+    "en": "Lemon zest"
+   },
+   "category": "flavoring",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "",
+    "en": ""
+   }
+  },
+  "ORANGE_ZEST": {
+   "name": {
+    "de": "Orangenschale",
+    "en": "Orange zest"
+   },
+   "category": "flavoring",
+   "water_pct": 0,
+   "fat_pct": 0,
+   "sugar_pct": 0,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "",
+    "en": ""
+   }
+  }
+ },
+ "recipes": [
+  {
+   "id": "WELTMEISTER",
+   "name": {
+    "de": "Weltmeisterbrot",
+    "en": "Weltmeister Bread"
+   },
+   "dough_class": "lean",
+   "leavening": "sourdough",
+   "shape": "boule",
+   "yield": 1000,
+   "bake": {
+    "de": "Pizzastein 250°C; 20 min nur Unterhitze + Dampf; dann 210–220°C fertig",
+    "en": "Pizza stone 250°C; 20 min bottom heat only + steam; then finish at 210–220°C"
+   },
+   "source": "Eigenes Rezept nach Brot #135",
+   "notes": {
+    "de": "Stiff Levain; Leinsamen-Kochstück; Saatenmantel; kalte Gare 10–11 h; baking loss ~14%",
+    "en": "Stiff levain; flax soaker; seed coating; cold proof 10–11 h; baking loss ~14%"
+   },
+   "items": [
+    {
+     "component": "STARTER",
+     "grams": 20,
+     "stage": "levain",
+     "param": 100,
+     "note": {
+      "de": "Anyakovász",
+      "en": "Mother starter"
+     }
+    },
+    {
+     "component": "BL55",
+     "grams": 50,
+     "stage": "levain",
+     "param": null,
+     "note": {
+      "de": "Levain-Mehl",
+      "en": "Levain flour"
+     }
+    },
+    {
+     "component": "WATER",
+     "grams": 25,
+     "stage": "levain",
+     "param": null,
+     "note": {
+      "de": "Levain-Wasser",
+      "en": "Levain water"
+     }
+    },
+    {
+     "component": "FLAX_GROUND",
+     "grams": 15,
+     "stage": "soaker",
+     "param": null,
+     "note": {
+      "de": "in 150 g Wasser gekocht, abgetropft",
+      "en": "cooked in 150 g water, drained"
+     }
+    },
+    {
+     "component": "KBL100",
+     "grams": 285,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "",
+      "en": ""
+     }
+    },
+    {
+     "component": "RYE_T1150",
+     "grams": 215,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "",
+      "en": ""
+     }
+    },
+    {
+     "component": "WATER",
+     "grams": 310,
+     "stage": "autolyse",
+     "param": null,
+     "note": {
+      "de": "",
+      "en": ""
+     }
+    },
+    {
+     "component": "WATER",
+     "grams": 20,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "Bassinage, nur wenn der Teig es verträgt",
+      "en": "bassinage, only if the dough can take it"
+     }
+    },
+    {
+     "component": "SALT",
+     "grams": 11,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "",
+      "en": ""
+     }
+    },
+    {
+     "component": "SESAME",
+     "grams": 20,
+     "stage": "coating",
+     "param": null,
+     "note": {
+      "de": "",
+      "en": ""
+     }
+    },
+    {
+     "component": "POPPY",
+     "grams": 20,
+     "stage": "coating",
+     "param": null,
+     "note": {
+      "de": "",
+      "en": ""
+     }
+    },
+    {
+     "component": "SUNFLOWER",
+     "grams": 30,
+     "stage": "coating",
+     "param": null,
+     "note": {
+      "de": "",
+      "en": ""
+     }
+    }
+   ]
+  },
+  {
+   "id": "KALACS_YEAST",
+   "name": {
+    "de": "Foszlós Kalács (Hefe)",
+    "en": "Braided Kalács (yeast)"
+   },
+   "dough_class": "enriched",
+   "leavening": "yeast",
+   "shape": "braided",
+   "yield": 1000,
+   "bake": {
+    "de": "170°C, ~40–45 min",
+    "en": "170°C, ~40–45 min"
+   },
+   "source": "Limara „Békebeli foszlós kalács“ (Kochbuch)",
+   "notes": {
+    "de": "Mit Sahne; Variante: 200 g Sahne → 150 ml Milch + 80 g Butter; Eistrich",
+    "en": "With cream; variant: 200 g cream → 150 ml milk + 80 g butter; egg wash"
+   },
+   "items": [
+    {
+     "component": "BL55",
+     "grams": 500,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "Finomliszt",
+      "en": "white flour"
+     }
+    },
+    {
+     "component": "MILK",
+     "grams": 100,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "1 dl",
+      "en": "1 dl"
+     }
+    },
+    {
+     "component": "CREAM30",
+     "grams": 200,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "2 dl Habtejszín 30%",
+      "en": "2 dl cream 30%"
+     }
+    },
+    {
+     "component": "SUGAR",
+     "grams": 60,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "6 dkg",
+      "en": "6 dkg"
+     }
+    },
+    {
+     "component": "YEAST_FRESH",
+     "grams": 20,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "2 dkg",
+      "en": "2 dkg"
+     }
+    },
+    {
+     "component": "EGG",
+     "grams": 50,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "1 Ei",
+      "en": "1 egg"
+     }
+    },
+    {
+     "component": "EGGYOLK",
+     "grams": 18,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "1 Dotter",
+      "en": "1 yolk"
+     }
+    },
+    {
+     "component": "SALT",
+     "grams": 6,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "1 kk",
+      "en": "1 tsp"
+     }
+    },
+    {
+     "component": "EGG",
+     "grams": 50,
+     "stage": "topping",
+     "param": null,
+     "note": {
+      "de": "Eistrich",
+      "en": "egg wash"
+     }
+    }
+   ]
+  },
+  {
+   "id": "KALACS_SD",
+   "name": {
+    "de": "Fonott Kalács (Sauerteig)",
+    "en": "Braided Kalács (sourdough)"
+   },
+   "dough_class": "enriched",
+   "leavening": "sourdough",
+   "shape": "braided",
+   "yield": 600,
+   "bake": {
+    "de": "180°C ohne Dampf, ~30 min",
+    "en": "180°C no steam, ~30 min"
+   },
+   "source": "Kovászlabor (nur verlinkt)",
+   "notes": {
+    "de": "Süßer Stiff-Levain 50% oder Madre; Butter; Vanille + Zitrus; Eistrich",
+    "en": "Sweet stiff levain 50% or madre; butter; vanilla + citrus; egg wash"
+   },
+   "items": [
+    {
+     "component": "LEVAIN",
+     "grams": 110,
+     "stage": "levain",
+     "param": 50,
+     "note": {
+      "de": "Süßer Stiff-Levain oder Madre",
+      "en": "sweet stiff levain or madre"
+     }
+    },
+    {
+     "component": "BL55",
+     "grams": 270,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "Pásztói BL55",
+      "en": "Pásztói BL55"
+     }
+    },
+    {
+     "component": "MILK",
+     "grams": 95,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "",
+      "en": ""
+     }
+    },
+    {
+     "component": "SUGAR",
+     "grams": 40,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "",
+      "en": ""
+     }
+    },
+    {
+     "component": "EGG",
+     "grams": 50,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "1 Ei",
+      "en": "1 egg"
+     }
+    },
+    {
+     "component": "EGGYOLK",
+     "grams": 18,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "1 Dotter",
+      "en": "1 yolk"
+     }
+    },
+    {
+     "component": "BUTTER",
+     "grams": 50,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "zimmerwarm, in Teilen",
+      "en": "room temp, in stages"
+     }
+    },
+    {
+     "component": "SALT",
+     "grams": 8,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "",
+      "en": ""
+     }
+    },
+    {
+     "component": "VANILLA",
+     "grams": 1,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "½ Schote / 1 TL Extrakt",
+      "en": "½ pod / 1 tsp extract"
+     }
+    },
+    {
+     "component": "LEMON_ZEST",
+     "grams": 1,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "nach Geschmack",
+      "en": "to taste"
+     }
+    },
+    {
+     "component": "ORANGE_ZEST",
+     "grams": 1,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "nach Geschmack",
+      "en": "to taste"
+     }
+    },
+    {
+     "component": "EGG",
+     "grams": 50,
+     "stage": "topping",
+     "param": null,
+     "note": {
+      "de": "Eistrich",
+      "en": "egg wash"
+     }
+    }
+   ]
+  }
+ ]
+};
+
+// ---- SVG ----
+const EAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22V9"/><path d="M12 9c0-2.2 1.8-4 4-4 0 2.2-1.8 4-4 4Z"/><path d="M12 9c0-2.2-1.8-4-4-4 0 2.2 1.8 4 4 4Z"/><path d="M12 13c0-2.2 1.8-4 4-4 0 2.2-1.8 4-4 4Z"/><path d="M12 13c0-2.2-1.8-4-4-4 0 2.2 1.8 4 4 4Z"/><path d="M12 17c0-2.2 1.8-4 4-4 0 2.2-1.8 4-4 4Z"/><path d="M12 17c0-2.2-1.8-4-4-4 0 2.2 1.8 4 4 4Z"/><path d="M12 6.5V4"/></svg>';
+function stalk(){let p=['<svg viewBox="0 0 60 220" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'];p.push('<path d="M30 220 V44"/>','<path d="M30 40 V26"/>');[52,74,96,118,140,162].forEach(y=>{p.push('<path d="M30 '+y+' c0-11 9-20 20-20 0 11-9 20-20 20Z"/>');p.push('<path d="M30 '+y+' c0-11 -9-20 -20-20 0 11 9 20 20 20Z"/>');});p.push('<path d="M30 34 c0-9 7-16 16-16 0 9-7 16-16 16Z"/>','<path d="M30 34 c0-9 -7-16 -16-16 0 9 7 16 16 16Z"/>','</svg>');return p.join('');}
+document.querySelectorAll('[data-ear]').forEach(e=>e.innerHTML=EAR);
+document.querySelectorAll('[data-stalk]').forEach(e=>e.innerHTML=stalk());
+
+// ---- i18n ----
+function L(){return document.body.classList.contains('lang-en')?'en':'de';}
+const TAG={
+ dough_class:{lean:{de:'Rustikal',en:'Lean'},enriched:{de:'Angereichert',en:'Enriched'}},
+ leavening:{sourdough:{de:'Sauerteig',en:'Sourdough'},yeast:{de:'Hefe',en:'Yeast'},mixed:{de:'Gemischt',en:'Mixed'}},
+ stage:{levain:{de:'Levain',en:'Levain'},soaker:{de:'Quellstück',en:'Soaker'},autolyse:{de:'Autolyse',en:'Autolyse'},main:{de:'Hauptteig',en:'Main dough'},coating:{de:'Mantel',en:'Coating'},topping:{de:'Bestreichen',en:'Topping'}},
+ kind:{wheat:{de:'Weizen',en:'Wheat'},rye:{de:'Roggen',en:'Rye'},wholegrain:{de:'Vollkorn',en:'Wholegrain'}},
+ allerg:{gluten:{de:'Gluten',en:'Gluten'},milk:{de:'Milch',en:'Milk'},egg:{de:'Ei',en:'Egg'},sesame:{de:'Sesam',en:'Sesame'}}
+};
+const UI={
+ flour:{de:'Mehl gesamt',en:'Total flour'},
+ eff:{de:'Effektive Hydration',en:'Effective hydration'},
+ hyd:{de:'Hydration (Teigwasser)',en:'Hydration (dough water)'},
+ salt:{de:'Salz',en:'Salt'},fat:{de:'Fett',en:'Fat'},sugar:{de:'Zucker',en:'Sugar'},
+ pff:{de:'Vorteig-Mehl',en:'Pre-fermented flour'},rye:{de:'Roggenanteil',en:'Rye share'},
+ ingredients:{de:'Zutaten',en:'Ingredients'},metrics:{de:'Kennzahlen',en:'Metrics'},
+ check:{de:'Backbarkeit',en:'Bakeability'},
+ scale:{de:'Menge (g Teig)',en:'Amount (g dough)'},water:{de:'Wasser anpassen',en:'Adjust water'},
+ bake:{de:'Backen',en:'Bake'},notes:{de:'Notizen',en:'Notes'},source:{de:'Quelle',en:'Source'},
+ allerg:{de:'Allergene',en:'Allergens'},
+ offlour:{de:'% vom Mehl',en:'% of flour'},
+ waternote:{de:'wirkt auf die Kennzahlen (Basis-Rezept)',en:'affects the metrics (base recipe)'},
+ verdict_ok:{de:'Backbar',en:'Bakeable'},verdict_warn:{de:'Backbar – mit Hinweisen',en:'Bakeable – with notes'},verdict_bad:{de:'Nicht backbar',en:'Not bakeable'}
+};
+function t(o){return o[L()];}
+
+// ---- engine ----
+function num(x){var n=parseFloat(x);return isNaN(n)?0:n;}
+function compute(r,wd){
+ wd=wd||0;
+ var flour=0,rye=0,pff=0,freeW=0,levW=0,ingW=0,soak=0,fat=0,sugar=0,salt=0,leav=false;
+ r.items.forEach(function(i){
+  if(i.stage==='coating'||i.stage==='topping')return;
+  var g=num(i.grams),c=i.component;
+  if(DATA.flours[c]){flour+=g;var k=DATA.flours[c].kind;if(k==='rye'||k==='wholegrain')rye+=g;if(i.stage==='levain')pff+=g;}
+  else if(c==='STARTER'||c==='LEVAIN'){var h=num(i.param)||100;var f=g/(1+h/100);flour+=f;pff+=f;levW+=(g-f);leav=true;}
+  else if(DATA.ingredients[c]){var ig=DATA.ingredients[c];
+    if(ig.category==='water')freeW+=g; else ingW+=g*num(ig.water_pct)/100;
+    fat+=g*num(ig.fat_pct)/100;sugar+=g*num(ig.sugar_pct)/100;salt+=g*num(ig.salt_pct)/100;soak+=g*num(ig.soak_water_pct)/100;
+    if(ig.category==='leavening')leav=true;}
+ });
+ freeW+=wd; var dough=freeW+levW, eff=dough+ingW+soak;
+ var P=function(x){return flour?x/flour*100:0;};
+ return {flour:flour,hyd:P(dough),eff:P(eff),fat:P(fat),sugar:P(sugar),salt:P(salt),pff:P(pff),rye:P(rye),leav:leav};
+}
+function bands(cls){return cls==='lean'
+  ?{hyd:[58,85],salt:[1.6,2.4]}
+  :{hyd:[45,68],salt:[1.0,2.5],fat:[8,35],sugar:[8,28]};}
+function f1(x){return (Math.round(x*10)/10).toString();}
+function checkRecipe(r,m){
+ var B=bands(r.dough_class),out=[],lv='ok';
+ function add(level,de,en){out.push({level:level,msg:{de:de,en:en}});if(level==='bad')lv='bad';else if(level==='warn'&&lv!=='bad')lv='warn';}
+ if(!m.leav)add('bad','Kein Triebmittel – das Brot geht nicht auf.','No leavening – it will not rise.');
+ var h=m.eff,hb=B.hyd;
+ if(h<hb[0])add('warn','Hydration '+f1(h)+'% – eher niedrig; etwas mehr Wasser möglich.','Hydration '+f1(h)+'% – on the low side; you could add water.');
+ else if(h>hb[1])add('warn','Hydration '+f1(h)+'% – hoch; Teig wird weich, evtl. Wasser reduzieren.','Hydration '+f1(h)+'% – high; the dough gets slack, consider less water.');
+ else add('ok','Hydration '+f1(h)+'% – im guten Bereich.','Hydration '+f1(h)+'% – in a good range.');
+ var s=m.salt,sb=B.salt;
+ if(s<sb[0])add('warn','Salz '+f1(s)+'% – wenig; Richtung ~2% erhöhen.','Salt '+f1(s)+'% – low; raise toward ~2%.');
+ else if(s>sb[1])add('warn','Salz '+f1(s)+'% – viel; etwas reduzieren.','Salt '+f1(s)+'% – high; reduce a little.');
+ else add('ok','Salz '+f1(s)+'% – passt.','Salt '+f1(s)+'% – good.');
+ if(r.dough_class==='enriched'){
+   var fb=B.fat,f=m.fat;
+   if(f<fb[0])add('warn','Fett '+f1(f)+'% – wenig für einen angereicherten Teig.','Fat '+f1(f)+'% – low for an enriched dough.');
+   else if(f>fb[1])add('warn','Fett '+f1(f)+'% – sehr reichhaltig; Gare wird länger.','Fat '+f1(f)+'% – very rich; proofing takes longer.');
+   else add('ok','Fett '+f1(f)+'% – passt.','Fat '+f1(f)+'% – good.');
+   var gb=B.sugar,su=m.sugar;
+   if(su>gb[1])add('warn','Zucker '+f1(su)+'% – sehr süß; Hefe/Gare beachten.','Sugar '+f1(su)+'% – very sweet; mind the yeast/proof.');
+   else if(su<gb[0])add('ok','Zucker '+f1(su)+'% – dezent.','Sugar '+f1(su)+'% – restrained.');
+   else add('ok','Zucker '+f1(su)+'% – passt.','Sugar '+f1(su)+'% – good.');
+ }
+ return {verdict:lv,lines:out};
+}
+function allergensOf(r){
+ var set={};
+ r.items.forEach(function(i){
+   if(DATA.flours[i.component])set['gluten']=1;
+   var ig=DATA.ingredients[i.component];
+   if(ig&&ig.allergens)ig.allergens.split(',').forEach(function(a){a=a.trim();if(a)set[a]=1;});
+ });
+ return Object.keys(set);
+}
+
+// ---- state + render ----
+var STATE={id:DATA.recipes[0].id,target:null,water:0};
+function recipeById(id){return DATA.recipes.find(function(r){return r.id===id;});}
+function baseTotal(r){var s=0;r.items.forEach(function(i){s+=num(i.grams);});return s;}
+
+function renderSelector(){
+ var el=document.getElementById('selector');el.innerHTML='';
+ DATA.recipes.forEach(function(r){
+   var b=document.createElement('button');b.textContent=t(r.name);
+   if(r.id===STATE.id)b.className='on';
+   b.onclick=function(){STATE.id=r.id;STATE.target=null;STATE.water=0;renderAll();};
+   el.appendChild(b);
+ });
+}
+var STAGE_ORDER=['levain','soaker','autolyse','main','coating','topping'];
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function renderPanel(){
+ var r=recipeById(STATE.id),lang=L();
+ var bt=baseTotal(r); if(STATE.target===null)STATE.target=Math.round(bt);
+ var factor=STATE.target/bt;
+ var base=compute(r,0);            // for baker % (flour basis, no tweak)
+ var m=compute(r,STATE.water);     // for metrics/check (with water tweak)
+
+ // ingredient table grouped by stage (scaled grams)
+ var tbl='';
+ STAGE_ORDER.forEach(function(st){
+   var rows=r.items.filter(function(i){return i.stage===st;});
+   if(!rows.length)return;
+   tbl+='<div class="stageblk"><div class="stagehd">'+esc(t(TAG.stage[st]))+'</div><table class="ing"><tbody>';
+   rows.forEach(function(i){
+     var nm=DATA.flours[i.component]?t(DATA.flours[i.component].name):(DATA.ingredients[i.component]?t(DATA.ingredients[i.component].name):i.component);
+     var note=i.note&&t(i.note)?'<div class="inote">'+esc(t(i.note))+'</div>':'';
+     var g=num(i.grams)*factor;
+     var gs=(g<10?f1(g):Math.round(g).toString())+' g';
+     var pct=(st==='topping')?'':f1(num(i.grams)/base.flour*100)+'%';
+     tbl+='<tr><td>'+esc(nm)+note+'</td><td class="g">'+gs+'</td><td class="p">'+pct+'</td></tr>';
+   });
+   tbl+='</tbody></table></div>';
+ });
+
+ // metrics
+ function mc(k,v){return '<div class="metric"><div class="k">'+esc(k)+'</div><div class="v">'+v+'</div></div>';}
+ var M='';
+ M+=mc(t(UI.flour), Math.round(m.flour)+' <small>g</small>');
+ M+=mc(t(UI.eff), f1(m.eff)+'<small>%</small>');
+ if(m.hyd>2) M+=mc(t(UI.hyd), f1(m.hyd)+'<small>%</small>');
+ M+=mc(t(UI.salt), f1(m.salt)+'<small>%</small>');
+ if(m.fat>0.5) M+=mc(t(UI.fat), f1(m.fat)+'<small>%</small>');
+ if(m.sugar>0.5) M+=mc(t(UI.sugar), f1(m.sugar)+'<small>%</small>');
+ if(m.pff>0.5) M+=mc(t(UI.pff), f1(m.pff)+'<small>%</small>');
+ if(m.rye>0.5) M+=mc(t(UI.rye), f1(m.rye)+'<small>%</small>');
+ var __c=(M.match(/class="metric"/g)||[]).length; if(__c%2) M+='<div class="metric"></div>';
+
+ // check
+ var chk=checkRecipe(r,m);
+ var vlabel=chk.verdict==='ok'?t(UI.verdict_ok):(chk.verdict==='warn'?t(UI.verdict_warn):t(UI.verdict_bad));
+ var vicon=chk.verdict==='ok'?'✓':(chk.verdict==='warn'?'!':'✕');
+ var checksHtml='<div class="verdict '+chk.verdict+'">'+vicon+' '+esc(vlabel)+'</div><ul class="checks">';
+ chk.lines.forEach(function(c){checksHtml+='<li><span class="dot '+c.level+'"></span><span>'+esc(t(c.msg))+'</span></li>';});
+ checksHtml+='</ul>';
+
+ // allergens
+ var al=allergensOf(r).map(function(a){return TAG.allerg[a]?t(TAG.allerg[a]):a;}).join(', ');
+
+ // badges + meta
+ var badges='<span class="badge cls">'+esc(t(TAG.dough_class[r.dough_class]))+'</span>'
+          +'<span class="badge">'+esc(t(TAG.leavening[r.leavening]))+'</span>';
+ var meta='';
+ if(t(r.bake)) meta+='<p class="meta-line"><b>'+esc(t(UI.bake))+':</b> '+esc(t(r.bake))+'</p>';
+ if(t(r.notes)) meta+='<p class="meta-line"><b>'+esc(t(UI.notes))+':</b> '+esc(t(r.notes))+'</p>';
+ if(al) meta+='<p class="meta-line"><b>'+esc(t(UI.allerg))+':</b> '+esc(al)+'</p>';
+ if(r.source) meta+='<p class="meta-line"><b>'+esc(t(UI.source))+':</b> '+esc(r.source)+'</p>';
+
+ // controls
+ var controls='<div class="controls">'
+  +'<div class="ctl"><label>'+esc(t(UI.scale))+'</label>'
+  +'<input type="number" id="scaleInput" min="100" step="50" value="'+Math.round(STATE.target)+'">'
+  +'<button class="chip" data-mult="0.5">×0.5</button><button class="chip" data-mult="1">×1</button><button class="chip" data-mult="2">×2</button></div>'
+  +'<div class="ctl"><label>'+esc(t(UI.water))+'</label>'
+  +'<input type="range" id="waterRange" min="-100" max="150" step="5" value="'+STATE.water+'">'
+  +'<span class="wval">'+(STATE.water>0?'+':'')+STATE.water+' g</span></div>'
+  +'<div class="hint">'+esc(t(UI.waternote))+'</div></div>';
+
+ document.getElementById('panel').innerHTML=
+   '<div class="card"><div class="rtitle"><h2>'+esc(t(r.name))+'</h2></div>'
+   +'<div class="badges">'+badges+'</div>'+meta
+   +'<div style="margin-top:4px">'+tbl+'</div></div>'
+   +'<div><div class="card"><h3 style="font-size:20px;margin-bottom:10px">'+esc(t(UI.metrics))+'</h3>'
+   +'<div class="metrics">'+M+'</div>'
+   +'<h3 style="font-size:20px;margin:18px 0 2px">'+esc(t(UI.check))+'</h3>'+checksHtml
+   +controls+'</div></div>';
+
+ // wire controls
+ var si=document.getElementById('scaleInput');
+ si.addEventListener('change',function(){var v=parseFloat(si.value);if(v>0){STATE.target=v;renderPanel();}});
+ document.querySelectorAll('.chip[data-mult]').forEach(function(c){c.onclick=function(){STATE.target=Math.round(bt*parseFloat(c.dataset.mult));renderPanel();};});
+ var wr=document.getElementById('waterRange');
+ wr.addEventListener('input',function(){STATE.water=parseInt(wr.value,10);renderPanel();});
+}
+function renderAll(){renderSelector();renderPanel();}
+
+function setLang(l){
+ document.body.classList.remove('lang-de','lang-en');document.body.classList.add('lang-'+l);
+ document.documentElement.lang=l;
+ document.getElementById('btn-de').classList.toggle('on',l==='de');
+ document.getElementById('btn-en').classList.toggle('on',l==='en');
+ document.title = l==='de'?'Rezepte & Brot-Rechner — Tamás Imre':'Recipes & Bread Calculator — Tamás Imre';
+ try{localStorage.setItem('brotlang',l);}catch(e){}
+ renderAll();
+}
+(function(){var l='de';try{var s=localStorage.getItem('brotlang');if(s==='en'||s==='de')l=s;}catch(e){}
+ document.body.classList.remove('lang-de','lang-en');document.body.classList.add('lang-'+l);
+ document.documentElement.lang=l;
+ document.getElementById('btn-de').classList.toggle('on',l==='de');document.getElementById('btn-en').classList.toggle('on',l==='en');
+ renderAll();})();
+</script>
+</body>
+</html>
