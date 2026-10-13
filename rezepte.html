@@ -194,6 +194,42 @@ const DATA = {
     "en": "Fine white flour; for levain & enriched doughs"
    },
    "in_stock": "yes"
+  },
+  "WHITE_STRONG": {
+   "name": {
+    "de": "Weizenmehl, stark (~14%)",
+    "en": "Strong white bread flour (~14%)"
+   },
+   "kind": "wheat",
+   "type_code": "~T650 (strong)",
+   "protein": 14,
+   "absorption": "high",
+   "origin": "",
+   "mill": "",
+   "photo": "",
+   "notes": {
+    "de": "Kräftiges Weißmehl; trägt die Struktur gegen die Tomatensäure",
+    "en": "Strong white flour; carries the structure against the tomato acidity"
+   },
+   "in_stock": "yes"
+  },
+  "WHEAT_T1050": {
+   "name": {
+    "de": "Weizenmehl T1050",
+    "en": "Wheat flour T1050"
+   },
+   "kind": "wheat",
+   "type_code": "T1050",
+   "protein": null,
+   "absorption": "medium",
+   "origin": "",
+   "mill": "",
+   "photo": "",
+   "notes": {
+    "de": "Wärmerer Ton & Geschmack; nicht Vollkorn",
+    "en": "Warmer tone & flavour; not wholegrain"
+   },
+   "in_stock": "yes"
   }
  },
  "ingredients": {
@@ -538,6 +574,25 @@ const DATA = {
     "de": "",
     "en": ""
    }
+  },
+  "PASSATA": {
+   "name": {
+    "de": "Passata (passierte Tomaten)",
+    "en": "Passata (strained tomatoes)"
+   },
+   "category": "liquid",
+   "water_pct": 89,
+   "fat_pct": 0,
+   "sugar_pct": 3.5,
+   "salt_pct": 0,
+   "soak_water_pct": 0,
+   "max_pct": 0,
+   "allergens": "",
+   "photo": "",
+   "notes": {
+    "de": "~89% Wasser; bringt natürlichen Zucker; ungesalzen",
+    "en": "~89% water; brings natural sugar; unsalted"
+   }
   }
  },
  "recipes": [
@@ -686,8 +741,8 @@ const DATA = {
   {
    "id": "KALACS_YEAST",
    "name": {
-    "de": "Foszlós Kalács (Hefe)",
-    "en": "Braided Kalács (yeast)"
+    "de": "Hefezopf (mit Hefe)",
+    "en": "Challah (yeast)"
    },
    "dough_class": "enriched",
    "leavening": "yeast",
@@ -798,8 +853,8 @@ const DATA = {
   {
    "id": "KALACS_SD",
    "name": {
-    "de": "Fonott Kalács (Sauerteig)",
-    "en": "Braided Kalács (sourdough)"
+    "de": "Hefezopf (mit Sauerteig)",
+    "en": "Challah (sourdough)"
    },
    "dough_class": "enriched",
    "leavening": "sourdough",
@@ -933,6 +988,108 @@ const DATA = {
      "note": {
       "de": "Eistrich",
       "en": "egg wash"
+     }
+    }
+   ]
+  },
+  {
+   "id": "TOMATEN_BROT",
+   "name": {
+    "de": "Tomaten-Sauerteigbrot",
+    "en": "Tomato Bread"
+   },
+   "dough_class": "lean",
+   "leavening": "sourdough",
+   "shape": "boule",
+   "yield": 960,
+   "bake": {
+    "de": "Glasierte Tonform oder Stein + Dampf; Kaltstart aus dem Kühlschrank, 220°C. ~30 min bedeckt, dann offen 20–30 min; letzte ~10 min auf dem Rost",
+    "en": "Glazed clay pot or stone + steam; cold start from the fridge, 220°C. ~30 min covered, then uncovered 20–30 min; last ~10 min on a rack"
+   },
+   "source": "Eigenes Rezept (Passata-Experiment)",
+   "notes": {
+    "de": "Zwei Drittel der Flüssigkeit sind Passata; die Tomatensäure schwächt das Gluten → weißdominanter Mix. Effektive Hydration ~66%. Bulk läuft schneller (Tomatenzucker); Hitze etwas niedriger, da der Zucker die Kruste schneller bräunt",
+    "en": "Two-thirds of the liquid is passata; tomato acidity weakens the gluten → white-dominant blend. Effective hydration ~66%. Bulk runs faster (tomato sugar); slightly lower heat since the sugar browns the crust sooner"
+   },
+   "items": [
+    {
+     "component": "STARTER",
+     "grams": 20,
+     "stage": "levain",
+     "param": 100,
+     "note": {
+      "de": "Anyakovász",
+      "en": "Mother starter"
+     }
+    },
+    {
+     "component": "BL55",
+     "grams": 50,
+     "stage": "levain",
+     "param": null,
+     "note": {
+      "de": "Levain-Mehl",
+      "en": "Levain flour"
+     }
+    },
+    {
+     "component": "WATER",
+     "grams": 25,
+     "stage": "levain",
+     "param": null,
+     "note": {
+      "de": "Levain-Wasser",
+      "en": "Levain water"
+     }
+    },
+    {
+     "component": "WHITE_STRONG",
+     "grams": 400,
+     "stage": "autolyse",
+     "param": null,
+     "note": {
+      "de": "80% – trägt die Struktur",
+      "en": "80% – carries the structure"
+     }
+    },
+    {
+     "component": "WHEAT_T1050",
+     "grams": 100,
+     "stage": "autolyse",
+     "param": null,
+     "note": {
+      "de": "20% – Farbe & Geschmack",
+      "en": "20% – colour & flavour"
+     }
+    },
+    {
+     "component": "PASSATA",
+     "grams": 240,
+     "stage": "autolyse",
+     "param": null,
+     "note": {
+      "de": "ca. zwei Drittel der Flüssigkeit",
+      "en": "about two-thirds of the liquid"
+     }
+    },
+    {
+     "component": "WATER",
+     "grams": 120,
+     "stage": "autolyse",
+     "param": null,
+     "note": {
+      "de": "ca. ein Drittel",
+      "en": "about one third"
+     }
+    },
+    {
+     "component": "SALT",
+     "grams": 10,
+     "stage": "main",
+     "param": null,
+     "note": {
+      "de": "ungesalzene Passata; gesalzen 8–9 g",
+      "en": "unsalted passata; salted 8–9 g"
      }
     }
    ]
@@ -1144,7 +1301,12 @@ function setLang(l){
  document.body.classList.remove('lang-de','lang-en');document.body.classList.add('lang-'+l);
  document.documentElement.lang=l;
  document.getElementById('btn-de').classList.toggle('on',l==='de');document.getElementById('btn-en').classList.toggle('on',l==='en');
- renderAll();})();
+ var deep=null;try{deep=new URLSearchParams(location.search).get('recipe')||(location.hash||'').replace('#','');}catch(e){}
+ var valid=deep&&DATA.recipes.some(function(r){return r.id===deep;});
+ if(valid)STATE.id=deep;
+ renderAll();
+ if(valid){var s=document.getElementById('selector');if(s)setTimeout(function(){s.scrollIntoView({behavior:'smooth',block:'start'});},60);}
+})();
 </script>
 </body>
 </html>
