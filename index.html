@@ -43,6 +43,17 @@ header.bar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);
 .lang button{border:0;background:transparent;padding:7px 14px;cursor:pointer;color:var(--ink-soft);
   letter-spacing:.08em;font-family:inherit;transition:.2s}
 .lang button.on{background:var(--ink);color:#fff}
+.baractions{display:flex;align-items:center;gap:18px}
+.navlink{text-decoration:none;font-weight:700;font-size:13.5px;letter-spacing:.02em;color:var(--ink-soft);border:1px solid var(--line);border-radius:999px;padding:7px 14px;transition:.2s;white-space:nowrap}
+.navlink:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:560px){.navlink{display:none}}
+.calc-cta{display:flex;align-items:center;gap:22px;margin:64px 0 0;padding:26px 30px;border:1px solid var(--line);border-radius:6px;background:var(--paper-2);text-decoration:none;color:inherit;transition:.25s}
+.calc-cta:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 18px 40px -26px rgba(23,19,16,.4)}
+.calc-cta h3{font-size:clamp(22px,3vw,30px);margin:2px 0 0}
+.calc-cta-sub{color:var(--ink-soft);margin:8px 0 0;font-size:16px;max-width:46em}
+.calc-cta-arrow{font-family:"Fraunces",serif;font-size:34px;color:var(--gold);flex:none;transition:transform .25s}
+.calc-cta:hover .calc-cta-arrow{transform:translateX(6px)}
+@media(max-width:560px){.calc-cta{padding:22px}.calc-cta-arrow{font-size:26px}}
 .lang button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
 .hero{position:relative;z-index:1;padding:78px 0 34px}
@@ -126,9 +137,12 @@ footer.foot svg{width:22px;height:22px;color:var(--gold);opacity:.8;margin-botto
 <header class="bar">
   <div class="wrap">
     <div class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22V9"/><path d="M12 9c0-2.2 1.8-4 4-4 0 2.2-1.8 4-4 4Z"/><path d="M12 9c0-2.2-1.8-4-4-4 0 2.2 1.8 4 4 4Z"/><path d="M12 13c0-2.2 1.8-4 4-4 0 2.2-1.8 4-4 4Z"/><path d="M12 13c0-2.2-1.8-4-4-4 0 2.2 1.8 4 4 4Z"/><path d="M12 17c0-2.2 1.8-4 4-4 0 2.2-1.8 4-4 4Z"/><path d="M12 17c0-2.2-1.8-4-4-4 0 2.2 1.8 4 4 4Z"/><path d="M12 6.5V4"/></svg> Tamás&nbsp;Imre</div>
-    <div class="lang" role="group" aria-label="Sprache / Language">
-      <button id="btn-de" class="on" onclick="setLang('de')" aria-pressed="true">DE</button>
-      <button id="btn-en" onclick="setLang('en')" aria-pressed="false">EN</button>
+    <div class="baractions">
+      <a class="navlink" href="rezepte.html"><span class="t de">Rezepte &amp; Rechner</span><span class="t en">Recipes &amp; Calculator</span></a>
+      <div class="lang" role="group" aria-label="Sprache / Language">
+        <button id="btn-de" class="on" onclick="setLang('de')" aria-pressed="true">DE</button>
+        <button id="btn-en" onclick="setLang('en')" aria-pressed="false">EN</button>
+      </div>
     </div>
   </div>
 </header>
@@ -313,6 +327,15 @@ footer.foot svg{width:22px;height:22px;color:var(--gold);opacity:.8;margin-botto
     </article>
 
   </div>
+
+  <a class="calc-cta" href="rezepte.html">
+    <div class="calc-cta-txt">
+      <p class="origin"><span class="t de">Interaktiv</span><span class="t en">Interactive</span></p>
+      <h3><span class="t de">Brot-Rechner &amp; alle Rezepte</span><span class="t en">Bread calculator &amp; all recipes</span></h3>
+      <p class="calc-cta-sub"><span class="t de">Jedes Rezept in Bäckerprozenten, skalierbar, mit Backbarkeits-Prüfung — aus meiner eigenen Rezept-Datenbank.</span><span class="t en">Every recipe in baker's percentages, scalable, with a bakeability check — from my own recipe database.</span></p>
+    </div>
+    <span class="calc-cta-arrow" aria-hidden="true">&rarr;</span>
+  </a>
 </div>
 
 <section class="contact" id="kontakt">
@@ -353,7 +376,9 @@ function setLang(l){
   de.classList.toggle('on',l==='de'); en.classList.toggle('on',l==='en');
   de.setAttribute('aria-pressed',l==='de'); en.setAttribute('aria-pressed',l==='en');
   document.title = l==='de' ? 'Tamás Imre — Backwerk' : 'Tamás Imre — Baking';
+  try{localStorage.setItem('brotlang',l);}catch(e){}
 }
+(function(){try{var s=localStorage.getItem('brotlang');if(s==='en')setLang('en');}catch(e){}})();
 var reveals=document.querySelectorAll('.reveal');
 function revealAll(){reveals.forEach(function(el){el.classList.add('in');});}
 if('IntersectionObserver' in window){
